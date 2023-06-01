@@ -2,25 +2,27 @@ package main
 
 import (
 	"Rotterdam/internal/user"
+	"Rotterdam/pkg/logging"
 	"github.com/julienschmidt/httprouter"
-	"log"
 	"net"
 	"net/http"
 	"time"
 )
 
 func main() {
-	log.Println("create router ")
+	logger := logging.GetLogger()
+	logger.Info("create router")
 	router := httprouter.New() //web-server.txt = создание роутера
 
-	log.Println("register user handler")
-	handler := user.NewHandler() // создаем хэндлер
-	handler.Register(router)     // регает хэндлеры в роутере
-	start(router)                // запускаем сервак
+	logger.Info("register user handler")
+	handler := user.NewHandler(logger) // создаем хэндлер
+	handler.Register(router)           // регает хэндлеры в роутере
+	start(router)                      // запускаем сервак
 }
 
 func start(router *httprouter.Router) {
-	log.Println("start application")
+	logger := logging.GetLogger()
+	logger.Info("start application")
 
 	listener, err := net.Listen("tcp", ":1234") //код для запуска сервера с помощью пакета net
 	// 0.0.0.0 все ip и все интерфейсы
@@ -35,6 +37,6 @@ func start(router *httprouter.Router) {
 		ReadTimeout:  15 * time.Second, // указать таймауты на чтение
 	}
 
-	log.Println("server is listeting port 1234")
-	log.Fatal(server.Serve(listener)) //почему log fatal????? в случае ошибок завершает работу программы с выводом сообщения об ошибке.
+	logger.Info("server is listeting port 1234")
+	logger.Fatal(server.Serve(listener)) //почему log fatal????? в случае ошибок завершает работу программы с выводом сообщения об ошибке.
 }

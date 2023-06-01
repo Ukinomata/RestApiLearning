@@ -2,6 +2,7 @@ package user
 
 import (
 	"Rotterdam/internal/handlers"
+	"Rotterdam/pkg/logging"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -14,10 +15,11 @@ const (
 )
 
 type handler struct {
+	Logger logging.Logger
 }
 
-func NewHandler() handlers.Handler {
-	return &handler{}
+func NewHandler(logger logging.Logger) handlers.Handler {
+	return &handler{Logger: logger}
 }
 
 func (h *handler) Register(router *httprouter.Router) {
